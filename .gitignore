@@ -1,0 +1,50 @@
+# --- Credentials & secrets: never commit ---
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p8
+*.p12
+*.keystore
+*_rsa
+*_ed25519
+credentials*
+secrets/
+*.secret
+service-account*.json
+auth.json
+token*.json
+
+# --- AI/agent working notes: never commit (public repo) ---
+.claude/
+CLAUDE.md
+CLAUDE.local.md
+AGENTS.local.md
+.codex/
+.grok/
+.opencode/
+.aider*
+NOTES.md
+notes/
+.ai/
+*.session.md
+ledger*.md
+brief*.md
+
+# --- Dependencies & build ---
+node_modules/
+dist/
+build/
+.next/
+out/
+coverage/
+*.tsbuildinfo
+
+# --- OS / editor ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+.pnpm-store/

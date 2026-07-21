@@ -1,0 +1,39 @@
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: pactlane
+      POSTGRES_PASSWORD: pactlane
+      POSTGRES_DB: pactlane
+    ports: ["5432:5432"]
+    volumes: [dbdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pactlane"]
+      interval: 2s
+      retries: 20
+  worker:
+    build: { context: ., dockerfile: apps/worker/Dockerfile }
+    environment:
+      DATABASE_URL: postgres://pactlane:pactlane@db:5432/pactlane
+      OPENAI_COMPATIBLE_BASE_URL: ${OPENAI_COMPATIBLE_BASE_URL:-http://ollama:11434/v1}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+    depends_on:
+      db: { condition: service_healthy }
+  web:
+    build: { context: ., dockerfile: apps/web/Dockerfile }
+    environment:
+      DATABASE_URL: postgres://pactlane:pactlane@db:5432/pactlane
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:?set in .env}
+      BETTER_AUTH_URL: http://localhost:3000
+    ports: ["3000:3000"]
+    depends_on:
+      db: { condition: service_healthy }
+  ollama:
+    image: ollama/ollama:latest
+    profiles: ["local-llm"]
+    ports: ["11434:11434"]
+    volumes: [ollama:/root/.ollama]
+volumes:
+  dbdata:
+  ollama:

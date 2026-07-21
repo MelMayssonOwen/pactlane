@@ -1,0 +1,20 @@
+{
+  "name": "@pactlane/worker",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "start": "tsx src/index.ts",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@pactlane/db": "workspace:*",
+    "@pactlane/runtime": "workspace:*",
+    "pg-boss": "^10.1.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.23.1",
+    "typescript": "^5.5.0",
+    "vitest": "^3.0.0"
+  }
+}

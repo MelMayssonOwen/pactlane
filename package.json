@@ -1,0 +1,14 @@
+{
+  "name": "pactlane",
+  "private": true,
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc -b packages/db packages/runtime apps/worker"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.0",
+    "vitest": "^3.0.0"
+  },
+  "packageManager": "pnpm@8.15.3"
+}

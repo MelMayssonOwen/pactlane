@@ -1,0 +1,9 @@
+{
+  "name": "@pactlane/db",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": { "test": "vitest run", "generate": "drizzle-kit generate", "migrate": "drizzle-kit migrate" },
+  "dependencies": { "drizzle-orm": "^0.44.0", "pg": "^8.13.0" },
+  "devDependencies": { "drizzle-kit": "^0.31.0", "@types/pg": "^8.11.0", "vitest": "^3.0.0", "typescript": "^5.5.0" }
+}
