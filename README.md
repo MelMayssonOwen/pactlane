@@ -28,7 +28,7 @@ An orchestration layer sees every prompt, tool call, credential, and approval de
 
 ## Status
 
-M1 (foundation) is shipped and verified end-to-end: auth → projects → agents → streamed runs with durable events, local-LLM smoke-tested. Next: the policy kernel (tool gateway, policies, approvals inbox, crash-safe pause/resume), then packs, the no-code builder, and Slack. See `ARCHITECTURE.md`.
+M1 (foundation) and M2 (policy kernel) are shipped and verified end-to-end: auth → projects → agents → policy-gated tool runs. Every tool call passes one choke point (allow / deny / require-approval, default deny); approval-gated runs suspend crash-safely, resume on human decision, and execute the approved call exactly once — verified live with a local model. Next: agent packs (multi-agent + services per project), the no-code builder, and Slack. See `ARCHITECTURE.md`.
 
 ## Contributing
 

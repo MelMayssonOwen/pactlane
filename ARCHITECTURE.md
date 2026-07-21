@@ -55,7 +55,7 @@ Crash-safe suspend/resume around approvals with no bypass path and no duplicate 
 ## Milestones
 
 1. **M1 Foundation** — compose up → login → create project + agent → streamed single-agent run, events durable in Postgres, local LLM works via OpenAI-compatible baseURL. *(plan: `docs/plans/2026-07-19-m1-foundation.md`)*
-2. **M2 Policy kernel** — ToolExecutor + PolicyEngine + approvals inbox + crash-safe pause/resume (the risk spike). Mastra adoption spike.
+2. **M2 Policy kernel** — SHIPPED 2026-07-21: ToolExecutor + PolicyEngine + approvals inbox + crash-safe pause/resume, verified E2E. Mastra spike verdict: stay-custom (hooks can't hard-enforce the choke point); revisit only @mastra/mcp as an adapter behind invokeTool at M3.
 3. **M3 Swarm** — multi-agent-and-service projects, shared context, agent↔agent messages, room view.
 4. **M4 Builder** — no-code swarm builder, MCP attach, templates, capability probes.
 5. **M5 Slack** — interactive approvals + notifications; self-host docs pass.
