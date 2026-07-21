@@ -30,6 +30,10 @@ An orchestration layer sees every prompt, tool call, credential, and approval de
 
 M1 (foundation) and M2 (policy kernel) are shipped and verified end-to-end: auth → projects → agents → policy-gated tool runs. Every tool call passes one choke point (allow / deny / require-approval, default deny); approval-gated runs suspend crash-safely, resume on human decision, and execute the approved call exactly once — verified live with a local model. Next: agent packs (multi-agent + services per project), the no-code builder, and Slack. See `ARCHITECTURE.md`.
 
+## Development
+
+Run `docker compose up -d db` for tests (`DATABASE_URL=postgres://pactlane:pactlane@localhost:5432/pactlane pnpm test`). If the full compose stack is up, `docker compose stop worker` first — the live worker shares the job queue with the test suite and will steal its runs.
+
 ## Contributing
 
 Early enough that everything is up for discussion — open an issue with what you'd want from an open agent-pack workspace. License: MIT.
