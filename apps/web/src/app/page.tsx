@@ -9,6 +9,9 @@ export default async function Home() {
   return (
     <main style={{ maxWidth: 640, margin: "5vh auto", display: "grid", gap: 12 }}>
       <h1>Projects</h1>
+      <nav>
+        <Link href="/approvals">Approval inbox</Link>
+      </nav>
       <form
         action={async (fd: FormData) => {
           "use server";
