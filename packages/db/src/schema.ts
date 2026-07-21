@@ -7,6 +7,18 @@ export const projects = pgTable("projects", {
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
+export type PolicyEffect = "allow" | "deny" | "require_approval";
+
+export const policies = pgTable("policies", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  projectId: uuid("project_id").notNull().references(() => projects.id, { onDelete: "cascade" }),
+  toolMatch: text("tool_match").notNull(), // glob: "*", "counter.*", "http.fetch"
+  effect: text("effect").$type<PolicyEffect>().notNull(),
+  priority: integer("priority").notNull().default(0), // higher wins within same effect class
+  enabled: boolean("enabled").notNull().default(true),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
 export const agents = pgTable("agents", {
   id: uuid("id").primaryKey().defaultRandom(),
   projectId: uuid("project_id").notNull().references(() => projects.id, { onDelete: "cascade" }),
@@ -17,7 +29,7 @@ export const agents = pgTable("agents", {
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
-export type RunStatus = "queued" | "running" | "done" | "failed";
+export type RunStatus = "queued" | "running" | "awaiting_approval" | "done" | "failed";
 
 export const runs = pgTable("runs", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -26,9 +38,42 @@ export const runs = pgTable("runs", {
   status: text("status").$type<RunStatus>().notNull().default("queued"),
   input: text("input").notNull(),
   error: text("error"),
+  checkpoint: jsonb("checkpoint"),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   finishedAt: timestamp("finished_at", { withTimezone: true }),
 });
+
+export type ApprovalStatus = "pending" | "approved" | "denied";
+
+export const approvals = pgTable("approvals", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  runId: uuid("run_id").notNull().references(() => runs.id, { onDelete: "cascade" }),
+  toolCallId: text("tool_call_id").notNull(),
+  toolName: text("tool_name").notNull(),
+  args: jsonb("args").notNull(),
+  argsHash: text("args_hash").notNull(),
+  status: text("status").$type<ApprovalStatus>().notNull().default("pending"),
+  decidedBy: text("decided_by"),
+  decidedAt: timestamp("decided_at", { withTimezone: true }),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export type InvocationStatus = "executed" | "denied" | "failed";
+
+export const toolInvocations = pgTable(
+  "tool_invocations",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    runId: uuid("run_id").notNull().references(() => runs.id, { onDelete: "cascade" }),
+    toolCallId: text("tool_call_id").notNull(),
+    toolName: text("tool_name").notNull(),
+    argsHash: text("args_hash").notNull(),
+    status: text("status").$type<InvocationStatus>().notNull(),
+    result: jsonb("result"),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [uniqueIndex("tool_invocations_call").on(t.runId, t.toolCallId)],
+);
 
 export const runEvents = pgTable(
   "run_events",
